@@ -1,7 +1,7 @@
 === Shakewell Mailer for Amazon SES ===
 Contributors: shakewell
 Tags: email, ses, amazon ses, wp_mail, aws
-Requires at least: 6.5
+Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
 Stable tag: 0.1.0
