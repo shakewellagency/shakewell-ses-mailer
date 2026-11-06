@@ -26,6 +26,7 @@ final class Plugin {
 			return;
 		}
 
+		add_filter( 'pre_http_send_through_proxy', array( Aws::class, 'no_proxy' ), 10, 2 );
 		add_filter( 'pre_wp_mail', array( self::class, 'pre_wp_mail' ), 1 );
 		add_action( 'phpmailer_init', array( self::class, 'phpmailer_init' ), 99 );
 		add_filter( 'wp_mail_from', array( self::class, 'from' ), 1 );

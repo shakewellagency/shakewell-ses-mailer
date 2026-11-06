@@ -16,6 +16,20 @@ defined( 'ABSPATH' ) || exit;
 final class Aws {
 
 	/**
+	 * Keeps the instance metadata and container credential calls off any HTTP proxy (WP_PROXY_HOST),
+	 * so the server's AWS credentials never pass through a third party.
+	 *
+	 * @param bool|null $send Whether core would use the proxy.
+	 * @param string    $uri  Request URL.
+	 * @return bool|null
+	 */
+	public static function no_proxy( $send, $uri ) {
+		$host = (string) wp_parse_url( (string) $uri, PHP_URL_HOST );
+
+		return in_array( $host, array( '169.254.169.254', '169.254.170.2', '169.254.170.23' ), true ) ? false : $send;
+	}
+
+	/**
 	 * Reduces an AWS error type or WordPress error code to a bare token, or '' if it is anything else.
 	 * "MessageRejected:http://internal.amazon.com/..." and "com.amazonaws.sesv2#MessageRejected" both
 	 * become "MessageRejected", so nothing but a fixed identifier can reach the log.

@@ -92,7 +92,7 @@ final class MailerTest extends WP_UnitTestCase {
 		Credentials::reset();
 		ini_set( 'error_log', $this->old_log ); // phpcs:ignore WordPress.PHP.IniSet.Risky -- test only.
 		unlink( $this->log_file );
-		$GLOBALS['phpmailer'] = null;
+		reset_phpmailer_instance(); // Back to the test suite's mock mailer, so later tests never reach a real PHPMailer.
 		parent::tear_down();
 	}
 
@@ -201,6 +201,12 @@ final class MailerTest extends WP_UnitTestCase {
 	}
 
 	// ---- The switch. ----
+
+	public function test_metadata_and_container_calls_never_use_a_proxy(): void {
+		$this->assertFalse( \Shakewell\SesMailer\Aws::no_proxy( null, 'http://169.254.169.254/latest/api/token' ) );
+		$this->assertFalse( \Shakewell\SesMailer\Aws::no_proxy( true, 'http://169.254.170.2/v2/credentials/abc' ) );
+		$this->assertTrue( \Shakewell\SesMailer\Aws::no_proxy( true, 'https://email.ap-southeast-2.amazonaws.com/v2/email/outbound-emails' ) );
+	}
 
 	public function test_off_by_default_registers_nothing_and_sends_nothing(): void {
 		remove_all_filters( 'shakewell_ses_mailer_enabled' );
