@@ -1,10 +1,10 @@
 === Shakewell Mailer for Amazon SES ===
-Contributors: shakewell
+Contributors: shakewellagency
 Tags: email, ses, amazon ses, wp_mail, aws
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,10 +28,10 @@ It is off until you switch it on, so installing it changes nothing by itself.
 
 = Configuration =
 
-Set these as PHP constants (for example in `wp-config.php`, or from the environment in Bedrock-style setups). None of them is a secret.
+Set these as PHP constants (for example in `wp-config.php`). None of them is a secret.
 
 * `SHAKEWELL_SES_MAILER_ENABLED`: `true` turns the mailer on. Default: off.
-* `SHAKEWELL_SES_MAILER_REGION`: the SES region, for example `eu-west-1`. If unset, the `AWS_REGION` or `AWS_DEFAULT_REGION` environment variable is used. There is no built-in default: with no valid region, sending fails with `reason=region`.
+* `SHAKEWELL_SES_MAILER_REGION`: the SES region, for example `eu-west-1`. If unset, the `AWS_REGION` or `AWS_DEFAULT_REGION` environment variable is used. There is no built-in default: with no valid region, sending fails with `reason=region` and an admin notice tells administrators to set one.
 * `SHAKEWELL_SES_MAILER_CONFIGURATION_SET`: optional SES configuration set name.
 * `SHAKEWELL_SES_MAILER_FROM`: replaces the WordPress default sender (`wordpress@your-site`). An explicit From address is always kept.
 * `SHAKEWELL_SES_MAILER_FROM_NAME`: replaces the default sender name "WordPress".
@@ -111,6 +111,11 @@ Yes. On PHP 8.2 and later, PHP also redacts credentials and message content from
 Please do not open a public issue. Follow SECURITY.md in the plugin's repository.
 
 == Changelog ==
+
+= 0.1.1 =
+* Works on any site: removed wording that assumed one hosting setup.
+* Shows a dismissible admin notice when the mailer is switched on but no valid AWS region is set.
+* Readme contributor corrected.
 
 = 0.1.0 =
 * First release.

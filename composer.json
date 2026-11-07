@@ -1,6 +1,6 @@
 {
     "name": "shakewellagency/shakewell-ses-mailer",
-    "description": "Starting point for Shakewell WordPress plugins.",
+    "description": "Sends WordPress email through Amazon SES using the AWS credentials the server already has.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
     "authors": [

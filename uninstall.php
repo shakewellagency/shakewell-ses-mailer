@@ -1,11 +1,10 @@
 <?php
 /**
- * Removes everything the plugin stored when it is deleted from the Plugins screen.
+ * Runs when the plugin is deleted from the Plugins screen.
  *
  * @package Shakewell\SesMailer
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
-// Delete this plugin's options, custom tables and scheduled events here.
-// Never delete content editors created unless the plugin's settings say to.
+// This plugin stores nothing in the database, so there is nothing to remove.
