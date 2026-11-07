@@ -3,7 +3,7 @@
  * Plugin Name:       Shakewell Mailer for Amazon SES
  * Plugin URI:        https://github.com/shakewellagency/shakewell-ses-mailer
  * Description:       Sends wp_mail() through Amazon SES with the AWS credentials the server already has. No key is ever stored in WordPress. Off until SHAKEWELL_SES_MAILER_ENABLED is true.
- * Version:           0.1.0
+ * Version:           0.1.1
  * Requires at least: 6.8
  * Requires PHP:      8.1
  * Author:            Shakewell
@@ -19,7 +19,7 @@ namespace Shakewell\SesMailer;
 
 defined( 'ABSPATH' ) || exit;
 
-const VERSION = '0.1.0';
+const VERSION = '0.1.1';
 const FILE    = __FILE__;
 
 require_once __DIR__ . '/src/SesError.php';
