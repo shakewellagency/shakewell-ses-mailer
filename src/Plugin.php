@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Core wp_mail() still does all the parsing (HTML and plain bodies, attachments, Reply-To, CC/BCC,
  * headers, filters, wp_mail_failed). Only the transport is swapped, by a PHPMailer subclass.
  *
- * Constants (wp-config.php or the environment):
+ * Constants (wp-config.php):
  * SHAKEWELL_SES_MAILER_ENABLED, _REGION, _CONFIGURATION_SET, _FROM, _FROM_NAME, _REPLY_TO.
  */
 final class Plugin {
@@ -26,11 +26,29 @@ final class Plugin {
 			return;
 		}
 
+		if ( '' === self::region() ) {
+			add_action( 'admin_notices', array( self::class, 'region_notice' ) );
+		}
+
 		add_filter( 'pre_http_send_through_proxy', array( Aws::class, 'no_proxy' ), 10, 2 );
 		add_filter( 'pre_wp_mail', array( self::class, 'pre_wp_mail' ), 1 );
 		add_action( 'phpmailer_init', array( self::class, 'phpmailer_init' ), 99 );
 		add_filter( 'wp_mail_from', array( self::class, 'from' ), 1 );
 		add_filter( 'wp_mail_from_name', array( self::class, 'from_name' ), 1 );
+	}
+
+	/**
+	 * Admin notice shown when the mailer is switched on but has no valid region, so every send would fail.
+	 */
+	public static function region_notice(): void {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			return;
+		}
+
+		printf(
+			'<div class="notice notice-warning is-dismissible"><p>%s</p></div>',
+			esc_html__( 'Shakewell Mailer for Amazon SES is switched on but has no valid AWS region, so email cannot be sent. Set SHAKEWELL_SES_MAILER_REGION in wp-config.php (see the plugin readme).', 'shakewell-ses-mailer' )
+		);
 	}
 
 	/**

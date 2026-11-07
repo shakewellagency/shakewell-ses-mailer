@@ -220,6 +220,25 @@ final class MailerTest extends WP_UnitTestCase {
 		$this->assertSame( array(), $this->calls );
 	}
 
+	public function test_switched_on_without_a_region_explains_itself_in_an_admin_notice(): void {
+		remove_all_filters( 'shakewell_ses_mailer_region' );
+		remove_all_actions( 'admin_notices' );
+		Plugin::boot();
+		$this->assertNotFalse( has_action( 'admin_notices', array( Plugin::class, 'region_notice' ) ) );
+
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		ob_start();
+		Plugin::region_notice();
+		$html = (string) ob_get_clean();
+		$this->assertStringContainsString( 'is-dismissible', $html );
+		$this->assertStringContainsString( 'SHAKEWELL_SES_MAILER_REGION', $html );
+
+		remove_all_actions( 'admin_notices' );
+		add_filter( 'shakewell_ses_mailer_region', static fn() => 'eu-west-1' );
+		Plugin::boot();
+		$this->assertFalse( has_action( 'admin_notices', array( Plugin::class, 'region_notice' ) ) );
+	}
+
 	public function test_switch_is_a_truthy_constant_or_the_filter(): void {
 		remove_all_filters( 'shakewell_ses_mailer_enabled' );
 		$this->assertFalse( Plugin::enabled() );
