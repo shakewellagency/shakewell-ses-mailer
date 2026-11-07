@@ -233,10 +233,11 @@ final class MailerTest extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'is-dismissible', $html );
 		$this->assertStringContainsString( 'SHAKEWELL_SES_MAILER_REGION', $html );
 
-		remove_all_actions( 'admin_notices' );
+		// A region added by a filter after boot (for example from a theme) silences the notice.
 		add_filter( 'shakewell_ses_mailer_region', static fn() => 'eu-west-1' );
-		Plugin::boot();
-		$this->assertFalse( has_action( 'admin_notices', array( Plugin::class, 'region_notice' ) ) );
+		ob_start();
+		Plugin::region_notice();
+		$this->assertSame( '', (string) ob_get_clean() );
 	}
 
 	public function test_switch_is_a_truthy_constant_or_the_filter(): void {

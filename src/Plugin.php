@@ -26,9 +26,8 @@ final class Plugin {
 			return;
 		}
 
-		if ( '' === self::region() ) {
-			add_action( 'admin_notices', array( self::class, 'region_notice' ) );
-		}
+		// The region is checked when the notice is shown, because a theme or plugin may add the region filter after this runs.
+		add_action( 'admin_notices', array( self::class, 'region_notice' ) );
 
 		add_filter( 'pre_http_send_through_proxy', array( Aws::class, 'no_proxy' ), 10, 2 );
 		add_filter( 'pre_wp_mail', array( self::class, 'pre_wp_mail' ), 1 );
@@ -41,7 +40,7 @@ final class Plugin {
 	 * Admin notice shown when the mailer is switched on but has no valid region, so every send would fail.
 	 */
 	public static function region_notice(): void {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
+		if ( '' !== self::region() || ! current_user_can( 'activate_plugins' ) ) {
 			return;
 		}
 
